@@ -49,7 +49,7 @@ class _CRG(Module):
 class BaseSoC(SoCCore):
     def __init__(self, revision):
         platform = colorlight_5a_75b.Platform(revision)
-        sys_clk_freq = int(50e6)
+        sys_clk_freq = int(33e6)
 
         # custom serial using j1 pins instead of led & button
         # platform.add_extension(_serial)
@@ -57,7 +57,7 @@ class BaseSoC(SoCCore):
         # SoC with CPU
         SoCCore.__init__(self, platform,
             cpu_type                 = "vexriscv",
-            clk_freq                 = sys_clk_freq*2,
+            clk_freq                 = sys_clk_freq*4,
             ident                    = "LiteX CPU Test SoC 5A-75B",
             ident_version            = True,
             integrated_rom_size      = 0x8000)
