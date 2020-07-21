@@ -92,12 +92,14 @@ static void reboot(void)
 
 static void led_test(void)
 {
+	printf("led_test is disabled\n");
+#if 0	
 	int i;
-	printf("led_test...\n");
 	for(i=0; i<32; i++) {
 		leds_out_write(i);
 		busy_wait(1);
 	}
+#endif	
 }
 
 static void console_service(void)
@@ -123,7 +125,7 @@ int main(void)
 	irq_setie(1);
 	uart_init();
 
-	puts("\nLab004 - CPU testing software built "__DATE__" "__TIME__"\n");
+	puts("\nHello RISC-V core on Lattice EPC5 FPGA\nTesting software built "__DATE__" "__TIME__"\n");
 	help();
 	prompt();
 
