@@ -21,6 +21,7 @@ from litex.soc.integration.builder import *
 
 from litedram.modules import M12L16161A
 from litedram.phy import GENSDRPHY
+from liteeth.phy.ecp5rgmii import LiteEthPHYRGMII
 
 # BaseSoC -----------------------------------------------------------------------------------------
 
@@ -40,7 +41,7 @@ class _CRG(Module):
 
         pll.register_clkin(clk25, 25e6)
         pll.create_clkout(self.cd_sys,    sys_clk_freq)
-        pll.create_clkout(self.cd_sys_ps, sys_clk_freq, phase=90) # Idealy 90° but needs to be increased.
+        pll.create_clkout(self.cd_sys_ps, sys_clk_freq, phase=180) # Idealy 90° but needs to be increased.
         self.specials += AsyncResetSynchronizer(self.cd_sys, ~pll.locked | ~rst_n)
 
         # SDRAM clock
@@ -49,7 +50,7 @@ class _CRG(Module):
 class BaseSoC(SoCCore):
     def __init__(self, revision):
         platform = colorlight_5a_75b.Platform(revision)
-        sys_clk_freq = int(42e6)
+        sys_clk_freq = int(50e6)
 
         # custom serial using j1 pins instead of led & button
         # platform.add_extension(_serial)
@@ -57,7 +58,7 @@ class BaseSoC(SoCCore):
         # SoC with CPU
         SoCCore.__init__(self, platform,
             cpu_type                 = "vexriscv",
-            clk_freq                 = sys_clk_freq*4,
+            clk_freq                 = sys_clk_freq*3,
             ident                    = "LiteX CPU Test SoC 5A-75B",
             ident_version            = True,
             integrated_rom_size      = 0x8000)
@@ -76,6 +77,11 @@ class BaseSoC(SoCCore):
             l2_cache_min_data_width = 128,
             l2_cache_reverse        = True
         )
+        self.submodules.ethphy = LiteEthPHYRGMII(
+            clock_pads = self.platform.request("eth_clocks"),
+            pads       = self.platform.request("eth"))
+        self.add_csr("ethphy")
+        self.add_ethernet(phy=self.ethphy)
 
 
 # Build --------------------------------------------------------------------------------------------
