@@ -49,7 +49,7 @@ class _CRG(Module):
 class BaseSoC(SoCCore):
     def __init__(self, revision):
         platform = colorlight_5a_75b.Platform(revision)
-        sys_clk_freq = int(33e6)
+        sys_clk_freq = int(42e6)
 
         # custom serial using j1 pins instead of led & button
         # platform.add_extension(_serial)
