@@ -7,6 +7,7 @@
 #include <console.h>
 #include <generated/csr.h>
 
+#if 0
 void busy_wait(unsigned int ds)
 {
 	timer0_en_write(0);
@@ -14,9 +15,9 @@ void busy_wait(unsigned int ds)
 	timer0_load_write(CONFIG_CLOCK_FREQUENCY/10*ds);
 	timer0_en_write(1);
 	timer0_update_value_write(1);
-	while(timer0_value_read()) timer0_update_value_write(1);
+	while (timer0_value_read()) timer0_update_value_write(1);
 }
-
+#endif
 
 static char *readstr(void)
 {
@@ -24,13 +25,13 @@ static char *readstr(void)
 	static char s[64];
 	static int ptr = 0;
 
-	if(readchar_nonblock()) {
+	if (readchar_nonblock()) {
 		c[0] = readchar();
 		c[1] = 0;
-		switch(c[0]) {
+		switch (c[0]) {
 			case 0x7f:
 			case 0x08:
-				if(ptr > 0) {
+				if (ptr > 0) {
 					ptr--;
 					putsnonl("\x08 \x08");
 				}
@@ -44,7 +45,7 @@ static char *readstr(void)
 				ptr = 0;
 				return s;
 			default:
-				if(ptr >= (sizeof(s) - 1))
+				if (ptr >= (sizeof(s) - 1))
 					break;
 				putsnonl(c);
 				s[ptr] = c[0];
@@ -60,15 +61,15 @@ static char *get_token(char **str)
 {
 	char *c, *d;
 
-	c = (char *)strchr(*str, ' ');
-	if(c == NULL) {
+	c = strchr(*str, ' ');
+	if (c == NULL) {
 		d = *str;
-		*str = *str+strlen(*str);
+		*str = *str + strlen(*str);
 		return d;
 	}
 	*c = 0;
 	d = *str;
-	*str = c+1;
+	*str = c + 1;
 	return d;
 }
 
@@ -92,7 +93,7 @@ static void reboot(void)
 
 static void led_test(void)
 {
-	printf("led_test is disabled\n");
+	puts("led_test is disabled");
 #if 0	
 	int i;
 	for(i=0; i<32; i++) {
@@ -108,13 +109,13 @@ static void console_service(void)
 	char *token;
 
 	str = readstr();
-	if(str == NULL) return;
+	if (str == NULL) return;
 	token = get_token(&str);
-	if(strcmp(token, "help") == 0)
+	if (strcmp(token, "help") == 0)
 		help();
-	else if(strcmp(token, "reboot") == 0)
+	else if (strcmp(token, "reboot") == 0)
 		reboot();
-	else if(strcmp(token, "led") == 0)
+	else if (strcmp(token, "led") == 0)
 		led_test();
 	prompt();
 }

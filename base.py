@@ -23,6 +23,9 @@ from litedram.modules import M12L16161A
 from litedram.phy import GENSDRPHY
 from liteeth.phy.ecp5rgmii import LiteEthPHYRGMII
 
+kB = 1024
+mB = 1024*kB
+
 # BaseSoC -----------------------------------------------------------------------------------------
 
 class _CRG(Module):
@@ -49,6 +52,14 @@ class _CRG(Module):
 
 class BaseSoC(SoCCore):
     def __init__(self, revision):
+        SoCCore.mem_map = {
+            "rom":          0x00000000,
+            "sram":         0x10000000,
+            "spiflash":     0x20000000,
+            "main_ram":     0x40000000,
+            "csr":          0x82000000,
+        }
+
         platform = colorlight_5a_75b.Platform(revision)
         sys_clk_freq = int(66e6)
 
@@ -59,30 +70,31 @@ class BaseSoC(SoCCore):
         SoCCore.__init__(self, platform,
             cpu_type                 = "vexriscv",
             clk_freq                 = sys_clk_freq*3,
-            ident                    = "LiteX CPU Test SoC 5A-75B",
+            ident                    = "LiteX RISC-V SoC on 5A-75B",
             ident_version            = True,
-            integrated_rom_size      = 0x8000)
+            integrated_rom_size      = 0x6000)
 
         # Clock Reset Generation
         # self.submodules.crg = CRG(platform.request("clk25"))
 
         self.submodules.crg = _CRG(platform, sys_clk_freq)
+
         self.submodules.sdrphy = GENSDRPHY(platform.request("sdram"))
         self.add_sdram("sdram",
             phy                     = self.sdrphy,
             module                  = M12L16161A(sys_clk_freq, "1:1"),
             origin                  = self.mem_map["main_ram"],
-            size                    = 4*1024*1024,
-            l2_cache_size           = 32768,
+            size                    = 4*mB,
+            l2_cache_size           = 0x8000,
             l2_cache_min_data_width = 128,
             l2_cache_reverse        = True
         )
-        self.submodules.ethphy = LiteEthPHYRGMII(
-            clock_pads = self.platform.request("eth_clocks"),
-            pads       = self.platform.request("eth"))
-        self.add_csr("ethphy")
-        self.add_ethernet(phy=self.ethphy)
-
+        #self.submodules.ethphy = LiteEthPHYRGMII(
+        #    clock_pads = self.platform.request("eth_clocks"),
+        #    pads       = self.platform.request("eth"))
+        #self.add_csr("ethphy")
+        #self.add_ethernet(phy=self.ethphy)
+        self.add_spi_flash(mode="1x", dummy_cycles=8)
 
 # Build --------------------------------------------------------------------------------------------
 

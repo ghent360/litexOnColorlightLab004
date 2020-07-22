@@ -11,7 +11,6 @@ void isr(void)
 
 	irqs = irq_pending() & irq_getmask();
 
-	if(irqs & (1 << UART_INTERRUPT))
+	if (irqs & (1 << UART_INTERRUPT))
 		uart_isr();
-
 }
