@@ -64,6 +64,8 @@ This code runs a special serial terminal which waits for a magic string, then up
 *Note: The standard UART speed is 115200 bps, however because we are running the CPU at 3x the system clock the UART speed ends up being 115200/3 = 38400*
 
 ### Boot screen
+The following screen is captured with minicom. You can see the magic string output for the lxterm serial bootloader. The console is interactive, you can type 'help' for a list of commands.
+
 ```
         __   _ __      _  __
        / /  (_) /____ | |/_/
