@@ -55,9 +55,11 @@ see [lab004] for more details.
 
 ## load firmware
 ```bash
-lxterm /dev/ttyUSBx --kernel firmware/firmware.bin
+lxterm /dev/ttyUSBx --speed 38400 --kernel firmware/firmware.bin
 ```
 where *ttyUSBx* is your USB <-> UART converter device. Sometimes it is called /dev/ttyACMx.
 
 This code runs a special serial terminal which waits for a magic string, then uploads the binary firmware/firmware.bin to the FPGA and runs it.
+
+*Note: The standard UART speed is 115200 bps, however because we are running the CPU at 3x the system clock the UART speed ends up being 115200/3 = 38400*
 
