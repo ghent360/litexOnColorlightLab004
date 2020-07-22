@@ -63,3 +63,61 @@ This code runs a special serial terminal which waits for a magic string, then up
 
 *Note: The standard UART speed is 115200 bps, however because we are running the CPU at 3x the system clock the UART speed ends up being 115200/3 = 38400*
 
+### Boot screen
+```
+        __   _ __      _  __
+       / /  (_) /____ | |/_/
+      / /__/ / __/ -_)>  <
+     /____/_/\__/\__/_/|_|
+   Build your hardware, easily!
+
+ (c) Copyright 2012-2020 Enjoy-Digital
+ (c) Copyright 2007-2015 M-Labs
+
+ BIOS built on Jul 21 2020 03:27:32
+ BIOS CRC passed (b5178a5a)
+
+ Migen git sha1: 731c192
+ LiteX git sha1: 63c19ff4
+
+--=============== SoC ==================--
+CPU:       VexRiscv @ 198MHz
+BUS:       WISHBONE 32-bit @ 4GiB
+CSR:       8-bit data
+ROM:       32KiB
+SRAM:      8KiB
+L2:        32KiB
+MAIN-RAM:  4096KiB
+
+--========== Initialization ============--
+Ethernet init...
+Initializing DRAM @0x40000000...
+SDRAM now under software control
+SDRAM now under hardware control
+Memtest at 0x40000000...
+[########################################]
+[########################################]
+Memtest OK
+Memspeed at 0x40000000...
+Writes: 461 Mbps
+Reads:  382 Mbps
+
+--============== Boot ==================--
+Booting from serial...
+Press Q or ESC to abort boot completely.
+sL5DdSMmkekro
+Timeout
+Booting from network...
+Local IP : 192.168.1.50
+Remote IP: 192.168.1.100
+Booting from boot.json...
+Booting from boot.bin...
+Copying boot.bin to 0x40000000... 
+Network boot failed.
+No boot medium found
+
+--============= Console ================--
+
+litex> 
+
+```
