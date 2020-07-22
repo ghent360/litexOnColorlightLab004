@@ -8,7 +8,8 @@ built with **LiTex** in a **Colorlight 5A-7B** (ECP5).
  * 4MB SDRAM running at 66MHz
  * Gigabit ethernet PHY enabled with netboot support (not tested yet)
  * FPGA configuration is downloaded in RAM, no flash support yet
-### Introduction
+
+## Introduction
 
 This demo is based on
 [litexOnColorlightLab004](https://github.com/trabucayre/litexOnColorlightLab004)
@@ -24,16 +25,17 @@ This demo is based on
 | Uart TX   | U16 | J19 (DATA_LED-) |
 | Uart RX   | R16 | J19 (KEY+)      |
 
-### software
+### Required hardware
+
+- **STM32 - blue pill** board repurposed as JTAG probe (see [dirtyJTAG](https://github.com/jeanthom/DirtyJTAG))
+- **ColorLight** has no on-board JTAG adapter, so user must solder a pinheader
+  (**J27** for JTAG signals, **J33** for VCC and **J34** for GND) and connect an external probe (see
+  [chubby75](https://github.com/q3k/chubby75/tree/master/5a-75b))
+- an USB <-> serial converter must be used to have access to serial interface
+
+### Software setup
 
 - [Detailed instructions on the setup for Ubuntu 20.04 are on my blog](https://blog.pcbxprt.com/index.php/2020/07/19/running-risc-v-core-on-small-fpga-board/)
-
-### hardware
-
-- **ColorLight** has no on-board JTAG adapter, so user must solder a pinheader
-  (**J27** for JTAG signals, **J33** for VCC and **J34** for GND) and connect an external probe (see.
-  [chubby75](https://github.com/q3k/chubby75/tree/master/5a-75b));
-- an USB <-> serial converter must be used to have access to serial interface
 
 ## Build
 
@@ -48,22 +50,22 @@ cd firmware && make
 ```
 see [lab004] for more details.
 
-## load bitstream
+## Load FPGA bitstream
 ```bash
 ./base.py --load --cable dirtyJtag
 ```
 
-## load firmware
+## Load and run RISC-V firmware
 ```bash
 lxterm /dev/ttyUSBx --speed 38400 --kernel firmware/firmware.bin
 ```
 where *ttyUSBx* is your USB <-> UART converter device. Sometimes it is called /dev/ttyACMx.
 
-This code runs a special serial terminal which waits for a magic string, then uploads the binary firmware/firmware.bin to the FPGA and runs it.
+This command runs a special serial terminal which waits for a magic string, then uploads the binary firmware/firmware.bin to the FPGA and runs it.
 
-*Note: The standard UART speed is 115200 bps, however because we are running the CPU at 3x the system clock the UART speed ends up being 115200/3 = 38400*
+*Note: The standard UART speed is 115200 bps, however because we are running the CPU at 3x the system clock the UART speed ends up being 115200/3 = 38400 bps*
 
-### Boot screen
+## Boot screen
 The following screen is captured with minicom. You can see the magic string output for the lxterm serial bootloader. The console is interactive, you can type 'help' for a list of commands.
 
 ```
