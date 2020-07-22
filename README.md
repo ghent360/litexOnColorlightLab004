@@ -1,7 +1,6 @@
 # RISC-V on Colorlight 5A-75B (v7.0)
 
-Demonstration on using a Soft Core (**VexRiscv**)
-built with **LiTex** in a **Colorlight 5A-7B** (ECP5).
+Demo soft SoC (**VexRiscv**) built with **LiTex** on a **Colorlight 5A-7B** board (Lattice ECP5).
 
 ### Current configuration
  * CPU runs at 198MHz with 32KB cache
