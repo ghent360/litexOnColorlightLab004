@@ -63,19 +63,13 @@ class BaseSoC(SoCCore):
         platform = colorlight_5a_75b.Platform(revision)
         sys_clk_freq = int(66e6)
 
-        # custom serial using j1 pins instead of led & button
-        # platform.add_extension(_serial)
-
         # SoC with CPU
         SoCCore.__init__(self, platform,
             cpu_type                 = "vexriscv",
             clk_freq                 = sys_clk_freq*3,
             ident                    = "LiteX RISC-V SoC on 5A-75B",
             ident_version            = True,
-            integrated_rom_size      = 0x6000)
-
-        # Clock Reset Generation
-        # self.submodules.crg = CRG(platform.request("clk25"))
+            integrated_rom_size      = 0x8000)
 
         self.submodules.crg = _CRG(platform, sys_clk_freq)
 
@@ -89,11 +83,13 @@ class BaseSoC(SoCCore):
             l2_cache_min_data_width = 128,
             l2_cache_reverse        = True
         )
-        #self.submodules.ethphy = LiteEthPHYRGMII(
-        #    clock_pads = self.platform.request("eth_clocks"),
-        #    pads       = self.platform.request("eth"))
-        #self.add_csr("ethphy")
-        #self.add_ethernet(phy=self.ethphy)
+
+        self.submodules.ethphy = LiteEthPHYRGMII(
+            clock_pads = self.platform.request("eth_clocks"),
+            pads       = self.platform.request("eth"))
+        self.add_csr("ethphy")
+        self.add_ethernet(phy=self.ethphy)
+
         self.add_spi_flash(mode="1x", dummy_cycles=8)
 
 # Build --------------------------------------------------------------------------------------------
