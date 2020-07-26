@@ -70,7 +70,8 @@ unsigned        Begin_Time,
                 End_Time,
                 User_Time;
 float           Microseconds,
-                Dhrystones_Per_Second;
+                Dhrystones_Per_Second,
+                DMIPS;
 
 /* end of variables for time measurement */
 
@@ -290,13 +291,16 @@ void dhrystone_main (void)
 //                        / (float) User_Time;
     Microseconds = (float)User_Time / (float)Number_Of_Runs / (float)(CONFIG_CLOCK_FREQUENCY / 1000000);
     Dhrystones_Per_Second = ((float)Number_Of_Runs * (float)CONFIG_CLOCK_FREQUENCY / (float)User_Time);
+    DMIPS = Dhrystones_Per_Second / 1757;
 #endif
     printf ("Microseconds for one run through Dhrystone: ");
     //printf ("%6.1f \n", Microseconds);
-    printf ("%d \n", (int)Microseconds);
+    printf ("%d.%d \n", (int)Microseconds, (int)(Microseconds * 100) % 100);
     printf ("Dhrystones per Second:                      ");
     //printf ("%6.1f \n", Dhrystones_Per_Second);
-    printf ("%d \n", (int)Dhrystones_Per_Second);
+    printf ("%d.%d \n", (int)Dhrystones_Per_Second, (int)(Dhrystones_Per_Second * 100) % 100);
+    printf ("DMIPS                                       ");
+    printf ("%d.%d \n", (int)DMIPS, (int)(DMIPS * 100) % 100);
     printf ("\n");
   }
   
