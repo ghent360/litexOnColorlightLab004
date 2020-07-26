@@ -6,6 +6,7 @@
 #include <uart.h>
 #include <console.h>
 #include <generated/csr.h>
+#include "dhry.h"
 
 #if 0
 void busy_wait(unsigned int ds)
@@ -84,6 +85,7 @@ static void help(void)
 	puts("help                            - this command");
 	puts("reboot                          - reboot CPU");
 	puts("led                             - led test");
+	puts("dhry                            - Dhrystone benchmark");
 }
 
 static void reboot(void)
@@ -117,6 +119,8 @@ static void console_service(void)
 		reboot();
 	else if (strcmp(token, "led") == 0)
 		led_test();
+	else if (strcmp(token, "dhry") == 0)
+		dhrystone_main();
 	prompt();
 }
 

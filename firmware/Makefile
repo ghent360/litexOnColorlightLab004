@@ -3,7 +3,7 @@ BUILD_DIR=../build/colorlight_5a_75b
 include $(BUILD_DIR)/software/include/generated/variables.mak
 include $(SOC_DIRECTORY)/software/common.mak
 
-OBJECTS=isr.o main.o
+OBJECTS=isr.o main.o dhry_1.o dhry_2.o clock.o
 
 all: firmware.bin
 
@@ -26,10 +26,10 @@ firmware.elf: $(OBJECTS)
 	chmod -x $@
 
 main.o: main.c
-	$(compile)
+	$(compile) -DMSC_CLOCK
 
 %.o: %.c
-	$(compile)
+	$(compile) -DMSC_CLOCK
 
 %.o: %.S
 	$(assemble)
