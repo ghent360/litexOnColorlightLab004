@@ -120,7 +120,7 @@ static void console_service(void)
 	else if (strcmp(token, "led") == 0)
 		led_test();
 	else if (strcmp(token, "dhry") == 0)
-		dhrystone_main();
+		dhrystone_main(200000);
 	prompt();
 }
 

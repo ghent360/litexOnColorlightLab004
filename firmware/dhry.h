@@ -429,7 +429,7 @@ typedef struct record
       } Rec_Type, *Rec_Pointer;
 
 
-void dhrystone_main (void);
+void dhrystone_main (int dhrystone_iterations);
 Enumeration     Func_1 (Capital_Letter Ch_1_Par_Val, Capital_Letter Ch_2_Par_Val);
 Boolean         Func_2 (Str_30 Str_1_Par_Ref, Str_30 Str_2_Par_Ref);
 Boolean         Func_3 (Enumeration Enum_Par_Val);

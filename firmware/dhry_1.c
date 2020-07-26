@@ -20,10 +20,6 @@
 #include <generated/soc.h>
 #include <generated/csr.h>
 
-#ifndef DHRY_ITERS
-#define DHRY_ITERS 200000
-#endif
-
 /* Global Variables: */
 
 Rec_Pointer     Ptr_Glob,
@@ -76,7 +72,7 @@ float           Microseconds,
 /* end of variables for time measurement */
 
 
-void dhrystone_main (void)
+void dhrystone_main (int dhrystone_iterations)
 /*****/
 
   /* main program, corresponds to procedures        */
@@ -126,20 +122,11 @@ void dhrystone_main (void)
     printf ("Program compiled without 'register' attribute\n");
     printf ("\n");
   }
-#ifdef DHRY_ITERS
-  Number_Of_Runs = DHRY_ITERS;
-#else
-  printf ("Please give the number of runs through the benchmark: ");
-  {
-    int n;
-    scanf ("%d", &n);
-    Number_Of_Runs = n;
-  }
-  printf ("\n");
-#endif
+  Number_Of_Runs = dhrystone_iterations;
 
   printf ("Execution starts, %d runs through Dhrystone\n", Number_Of_Runs);
 
+  Int_2_Loc = 0;
   /***************/
   /* Start timer */
   /***************/
