@@ -126,6 +126,7 @@ void dhrystone_main (int dhrystone_iterations)
 
   printf ("Execution starts, %d runs through Dhrystone\n", Number_Of_Runs);
 
+  Int_1_Loc = 0;
   Int_2_Loc = 0;
   /***************/
   /* Start timer */

@@ -26,10 +26,10 @@ firmware.elf: $(OBJECTS)
 	chmod -x $@
 
 main.o: main.c
-	$(compile) -DMSC_CLOCK
+	$(compile) -DMSC_CLOCK -O2
 
 %.o: %.c
-	$(compile) -DMSC_CLOCK
+	$(compile) -DMSC_CLOCK -O3 -mcmodel=medany -ffast-math -fno-common -march='rv32im' -mno-save-restore
 
 %.o: %.S
 	$(assemble)
