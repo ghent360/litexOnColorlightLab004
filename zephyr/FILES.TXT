@@ -1,0 +1,4 @@
+List of modified files from the original zephyr source tree
+
+riscv32-litex-vexriscv.dtsi -> $ZEPHYR/dts/riscv/riscv32-litex-vexriscv.dtsi
+litex_vexriscv.dts -> $ZEPHYR/boards/riscv/litex_vexriscv/litex_vexriscv.dts

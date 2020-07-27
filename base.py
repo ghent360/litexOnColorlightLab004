@@ -3,6 +3,7 @@
 import os
 import argparse
 import sys
+import subprocess
 
 from migen import *
 from migen.genlib.resetsync import AsyncResetSynchronizer
@@ -66,8 +67,10 @@ class BaseSoC(SoCCore):
         # SoC with CPU
         SoCCore.__init__(self, platform,
             cpu_type                 = "vexriscv",
+            cpu_variant              = "linux",
             clk_freq                 = sys_clk_freq*3,
             ident                    = "LiteX RISC-V SoC on 5A-75B",
+            max_sdram_size           = 0x400000, # Limit mapped SDRAM to 4MB.
             ident_version            = True,
             integrated_rom_size      = 0x8000)
 
@@ -92,6 +95,24 @@ class BaseSoC(SoCCore):
 
         self.add_spi_flash(mode="1x", dummy_cycles=8)
 
+    # DTS generation ---------------------------------------------------------------------------
+    def generate_dts(self, board_name="colorlight_5a_75b"):
+        json = os.path.join("build", board_name, "csr.json")
+        dts = os.path.join("build", board_name, "{}.dts".format(board_name))
+        subprocess.check_call(
+            "./json2dts.py {} > {}".format(json, dts), shell=True)
+
+    # DTS compilation --------------------------------------------------------------------------
+    def compile_dts(self, board_name="colorlight_5a_75b"):
+        dts = os.path.join("build", board_name, "{}.dts".format(board_name))
+        dtb = os.path.join("buildroot", "rv32.dtb")
+        subprocess.check_call(
+            "dtc -O dtb -o {} {}".format(dtb, dts), shell=True)
+
+    def configure_boot(self):
+        if hasattr(self, "spiflash"):
+            self.add_constant("FLASH_BOOT_ADDRESS", self.mem_map["spiflash"] + 1*mB)
+
 # Build --------------------------------------------------------------------------------------------
 
 def main():
@@ -101,13 +122,18 @@ def main():
     trellis_args(parser)
     parser.add_argument("--build", action="store_true", help="Build bitstream")
     parser.add_argument("--load",  action="store_true", help="Load bitstream")
-    parser.add_argument("--cable", default="ft2232",    help="JTAG probe model")
+    parser.add_argument("--cable", default="dirtyJtag", help="JTAG probe model")
     args = parser.parse_args()
 
     soc = BaseSoC(revision="7.0")
 
-    builder = Builder(soc, **builder_argdict(args))
+    builder = Builder(
+        soc,
+        csr_json=os.path.join(os.path.join("build", "colorlight_5a_75b"), "csr.json"),
+        bios_options=["TERM_MINI"])
     builder.build(**trellis_argdict(args), run=args.build)
+
+    #soc.generate_dts()
 
     if args.load:
         print(args.cable)
