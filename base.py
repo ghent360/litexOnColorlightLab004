@@ -91,7 +91,7 @@ class BaseSoC(SoCCore):
         }
 
         platform = colorlight_5a_75b.Platform(revision)
-        sys_clk_freq = int(66e6)
+        sys_clk_freq = int(90e6)
 
         # SoC with CPU
         SoCCore.__init__(self, platform,
